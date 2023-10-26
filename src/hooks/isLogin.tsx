@@ -4,6 +4,7 @@ import Cookies from "universal-cookie";
 interface LoginState {
   isLogin: boolean;
   isPunchIn: boolean;
+  punchInTime: number;
   loginUser: () => void;
   logOutUser: () => void;
   punchInUser: () => void;
@@ -14,9 +15,11 @@ const cookies = new Cookies();
 
 export const useLogin = create<LoginState>((set) => ({
   isLogin: cookies.get("isLogin"),
-  isPunchIn: false,
+  isPunchIn: cookies.get("isPunchIn"),
+  punchInTime: cookies.get("punchInTime"),
   loginUser: () => set({ isLogin: true }),
   logOutUser: () => set({ isLogin: false }),
-  punchInUser: () => set({ isPunchIn: true }),
-  punchOutUser: () => set({ isPunchIn: false }),
+  punchInUser: () =>
+    set({ isPunchIn: true, punchInTime: new Date().getTime() }),
+  punchOutUser: () => set({ isPunchIn: false, punchInTime: 0 }),
 }));

@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/form";
 import { useLogin } from "@/hooks/isLogin";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "../ui/use-toast";
 
 const formSchema = z.object({
   username: z.string().min(1, {
@@ -28,6 +29,7 @@ const formSchema = z.object({
 const cookies = new Cookies();
 
 const LoginForm = () => {
+  const { toast } = useToast();
   const { loginUser } = useLogin();
 
   const navigate = useNavigate();
@@ -42,13 +44,17 @@ const LoginForm = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      console.log(values);
-      loginUser();
-      cookies.set("isLogin", true);
-
-      navigate("/home");
-
-      form.reset();
+      if (values.username === "hardik" && values.password === "123456") {
+        loginUser();
+        cookies.set("isLogin", true);
+        form.reset();
+        navigate("/home");
+      } else {
+        toast({
+          title: "Username or Password is incorrect!",
+          variant: "destructive",
+        });
+      }
     } catch (error) {
       console.log(error);
     }

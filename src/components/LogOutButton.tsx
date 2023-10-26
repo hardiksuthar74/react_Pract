@@ -14,10 +14,12 @@ const LogOutButton = () => {
   const logoutUserHandler = () => {
     if (!isPunchIn) {
       cookies.remove("isLogin");
+      cookies.remove("isPunchIn");
       logOutUser();
     } else {
       toast({
         title: "Please Punch Out",
+        variant: "destructive",
       });
     }
   };
