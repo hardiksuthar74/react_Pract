@@ -1,6 +1,7 @@
 import MitraLogo from "../MitraLogo";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import Cookies from "universal-cookie";
 
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -10,7 +11,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { useLogin } from "@/hooks/isLogin";
@@ -24,6 +24,8 @@ const formSchema = z.object({
     message: "Password is required.",
   }),
 });
+
+const cookies = new Cookies();
 
 const LoginForm = () => {
   const { loginUser } = useLogin();
@@ -42,6 +44,8 @@ const LoginForm = () => {
     try {
       console.log(values);
       loginUser();
+      cookies.set("isLogin", true);
+
       navigate("/home");
 
       form.reset();
@@ -53,7 +57,7 @@ const LoginForm = () => {
   const isLoading = form.formState.isSubmitting;
 
   return (
-    <main className="bg-slate-50 flex flex-col justify-center items-center max-w-[600px] m-auto h-screen">
+    <main className="bg-slate-50 flex flex-col justify-center items-center max-w-[500px] m-auto h-screen">
       <MitraLogo />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

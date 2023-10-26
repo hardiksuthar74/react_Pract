@@ -2,11 +2,24 @@ import { LogOut } from "lucide-react";
 import { Button } from "./ui/button";
 import { useLogin } from "@/hooks/isLogin";
 
+import Cookies from "universal-cookie";
+import { useToast } from "./ui/use-toast";
+
+const cookies = new Cookies();
+
 const LogOutButton = () => {
-  const { logOutUser } = useLogin();
+  const { toast } = useToast();
+  const { logOutUser, isPunchIn } = useLogin();
 
   const logoutUserHandler = () => {
-    logOutUser();
+    if (!isPunchIn) {
+      cookies.remove("isLogin");
+      logOutUser();
+    } else {
+      toast({
+        title: "Please Punch Out",
+      });
+    }
   };
 
   return (
