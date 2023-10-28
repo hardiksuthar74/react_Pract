@@ -8,6 +8,8 @@ import You from "./pages/You";
 import PatientList from "./pages/PatientList";
 import Education from "./pages/Education";
 import { Toaster } from "./components/ui/toaster";
+import Camp from "./pages/Camp";
+import AddPatient from "./pages/AddPatient";
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
             <Route path="/you" element={<You />} />
             <Route path="/patient_list" element={<PatientList />} />
             <Route path="/education" element={<Education />} />
+            <Route path="/home/camp" element={<Camp />} />
+            <Route path="/home/addPatient" element={<AddPatient />} />
           </Route>
           <Route path={"/login"} element={<LoginForm />} />
         </Routes>
