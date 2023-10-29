@@ -29,74 +29,6 @@ import {
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-const MoreBrand = () => {
-  return (
-    <div className="border-yellow-300 border-solid border-2 rounded-lg p-4 mb-4">
-      <div className="flex gap-4 mb-4">
-        <div>
-          <Label>Brand Name:</Label>
-          <Select>
-            <SelectTrigger className="w-[190px] mt-4">
-              <SelectValue placeholder="Select Brand" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Male">Example</SelectItem>
-              <SelectItem value="Female">Example</SelectItem>
-              <SelectItem value="Other">Example</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div>
-          <Label>Dosage Per:</Label>
-          <Select>
-            <SelectTrigger className="w-[190px] mt-4">
-              <SelectValue placeholder="Select" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Male">Example</SelectItem>
-              <SelectItem value="Female">Example</SelectItem>
-              <SelectItem value="Other">Example</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
-      <div className="mb-4">
-        <Label>SKU:</Label>
-
-        <Select>
-          <SelectTrigger className="w-full mt-4">
-            <SelectValue placeholder="Select SKU" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="Male">Example</SelectItem>
-            <SelectItem value="Female">Example</SelectItem>
-            <SelectItem value="Other">Example</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      <Label>Dosage:</Label>
-      <div className="flex gap-1 justify-between items-center my-4">
-        <div className="flex justify-center items-center gap-2">
-          <Input className="w-24" placeholder="00" />
-          <Label>M</Label>
-        </div>
-
-        <div className="flex justify-center items-center gap-2">
-          <Input className="w-24" placeholder="00" />
-          <Label>A</Label>
-        </div>
-
-        <div className="flex justify-center items-center gap-2">
-          <Input className="w-24" placeholder="00" />
-          <Label>E</Label>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 const formSchema = z.object({
   doctorName: z.string().min(1, {
     message: "Doctor Name is required.",
@@ -149,6 +81,15 @@ const formSchema = z.object({
   type: z.string().min(1, {
     message: "Type is required.",
   }),
+  brands: z
+    .array(
+      z.string().min(1, {
+        message: "Brand is required",
+      })
+    )
+    .min(1, {
+      message: "Brand is required",
+    }),
 });
 
 const AddPatient = () => {
@@ -189,6 +130,7 @@ const AddPatient = () => {
       notes: "",
       dnd: "",
       type: "",
+      brands: [""],
     },
   });
 
@@ -564,11 +506,167 @@ const AddPatient = () => {
             </Card>
 
             <Card>
-              {brandTime.map((_singleBrand, index) => {
-                return <MoreBrand key={index} />;
+              {brandTime.map((_, index) => {
+                return (
+                  <div
+                    key={index}
+                    className="border-yellow-300 border-solid border-2 rounded-lg p-4 mb-4"
+                  >
+                    <div className="flex gap-4 mb-4">
+                      <div>
+                        <FormField
+                          control={form.control}
+                          name={`brands.${index}`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Brand Name:</FormLabel>
+                              <Select
+                                disabled={isLoading}
+                                onValueChange={field.onChange}
+                                value={field.value}
+                              >
+                                <FormControl>
+                                  <SelectTrigger className="w-[190px] mt-4 bg-zinc-300/50 border-0 focus:ring-0 text-black ring-offset-0 focus:ring-offset-0 capitalize outline-none">
+                                    <SelectValue placeholder="Select Brand" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="Male">Humalog</SelectItem>
+                                  <SelectItem value="Female">
+                                    Basalgaar
+                                  </SelectItem>
+                                  <SelectItem value="Other">Galvus</SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      <div>
+                        <FormField
+                          control={form.control}
+                          name={`dosagePer.${index}`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Dosage Per:</FormLabel>
+                              <Select
+                                disabled={isLoading}
+                                onValueChange={field.onChange}
+                              >
+                                <FormControl>
+                                  <SelectTrigger className="w-[190px] mt-4 bg-zinc-300/50 border-0 focus:ring-0 text-black ring-offset-0 focus:ring-offset-0 capitalize outline-none">
+                                    <SelectValue placeholder="Select" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="Male">Example</SelectItem>
+                                  <SelectItem value="Female">
+                                    Example
+                                  </SelectItem>
+                                  <SelectItem value="Other">Example</SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="mb-4">
+                      <FormField
+                        control={form.control}
+                        name={`sku.${index}`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>SKU:</FormLabel>
+                            <Select
+                              disabled={isLoading}
+                              onValueChange={field.onChange}
+                            >
+                              <FormControl>
+                                <SelectTrigger className="w-full mt-4 bg-zinc-300/50 border-0 focus:ring-0 text-black ring-offset-0 focus:ring-offset-0 capitalize outline-none">
+                                  <SelectValue placeholder="Select SKU" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="Male">Example</SelectItem>
+                                <SelectItem value="Female">Example</SelectItem>
+                                <SelectItem value="Other">Example</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <FormLabel>Dosage:</FormLabel>
+                    <div className="flex gap-1 justify-between items-center my-4">
+                      <FormField
+                        control={form.control}
+                        name="fasting"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input
+                                disabled={isLoading}
+                                className="w-28 bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
+                                placeholder="00"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormLabel>M</FormLabel>
+
+                      <FormField
+                        control={form.control}
+                        name="pp"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input
+                                disabled={isLoading}
+                                className="w-28 bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
+                                placeholder="00"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormLabel>A</FormLabel>
+
+                      <FormField
+                        control={form.control}
+                        name="hba1c"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input
+                                disabled={isLoading}
+                                className="w-28 bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
+                                placeholder="00"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormLabel>E</FormLabel>
+                    </div>
+                  </div>
+                );
               })}
               <div className="mt-6 text-yellow-300 border-yellow-300 border-solid border-2 rounded-lg">
                 <Button
+                  type="button"
                   className="w-full"
                   variant={"outline"}
                   onClick={addMoreBrandHandler}
