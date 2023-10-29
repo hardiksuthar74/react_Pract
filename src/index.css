@@ -74,6 +74,7 @@
   body {
     @apply bg-[#151515] text-foreground;
     font-family: "Poppins", sans-serif;
+    overflow-y: hidden;
   }
 
   ::-webkit-scrollbar {

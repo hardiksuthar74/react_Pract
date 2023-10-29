@@ -16,6 +16,18 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const MoreBrand = () => {
   return (
@@ -85,6 +97,60 @@ const MoreBrand = () => {
   );
 };
 
+const formSchema = z.object({
+  doctorName: z.string().min(1, {
+    message: "Doctor Name is required.",
+  }),
+  opdDate: z.string().min(1, {
+    message: "Opd Date is required.",
+  }),
+  opdSlot: z.string().min(1, {
+    message: "Opd Slot is required.",
+  }),
+  patientName: z.string().min(1, {
+    message: "Patient Name is required.",
+  }),
+  enrollmentDate: z.string().min(1, {
+    message: "Enrollment Date is required.",
+  }),
+  gender: z.string().min(1, {
+    message: "Gender is required.",
+  }),
+  age: z.string().min(1, {
+    message: "Age is required.",
+  }),
+  pincode: z.string().min(1, {
+    message: "Pincode is required.",
+  }),
+  mobile: z.string().min(1, {
+    message: "Mobile is required.",
+  }),
+  state: z.string().min(1, {
+    message: "State is required.",
+  }),
+  city: z.string().min(1, {
+    message: "City is required.",
+  }),
+  address: z.string().min(1, {
+    message: "Address is required.",
+  }),
+  diagnosis: z.string().min(1, {
+    message: "Diagnosis is required.",
+  }),
+  otherComorbidConditions: z.string().min(1, {
+    message: "Other Comorbid Conditions is required.",
+  }),
+  notes: z.string().min(1, {
+    message: "Notes is required.",
+  }),
+  dnd: z.string().min(1, {
+    message: "Dnd is required.",
+  }),
+  type: z.string().min(1, {
+    message: "Type is required.",
+  }),
+});
+
 const AddPatient = () => {
   const navigate = useNavigate();
 
@@ -95,9 +161,46 @@ const AddPatient = () => {
     setBrandTime([...brandTime, 1]);
   };
 
-  const typeHandler = (event: string) => {
+  const typeHandler = (event: string, onChange: (value: string) => void) => {
     setType(event);
+    onChange(event);
   };
+
+  const form = useForm({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      doctorName: "J Rawat",
+      opdDate: "2023-10-28",
+      opdSlot: "7:00 PM to 9:00 PM",
+      patientName: "",
+      enrollmentDate: "2023-10-28",
+      gender: "",
+      age: "",
+      pincode: "",
+      mobile: "",
+      state: "",
+      city: "",
+      address: "",
+      diagnosis: "",
+      otherComorbidConditions: "",
+      fasting: "",
+      pp: "",
+      hba1c: "",
+      notes: "",
+      dnd: "",
+      type: "",
+    },
+  });
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      console.log(values);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const isLoading = form.formState.isSubmitting;
 
   return (
     <div className="bg-[#e0e0e0] h-full overflow-y-scroll">
@@ -113,257 +216,565 @@ const AddPatient = () => {
         <div className="opacity-0">{""}</div>
       </TopBar>
       <WholeScreen>
-        <Card>
-          <div className="mb-4">
-            <Label>Doctor Name:</Label>
-            <Input className="mt-4" readOnly value={"J Rawat"} />
-          </div>
-          <div className="flex gap-4 mb-4">
-            <div>
-              <Label>OPD Date:</Label>
-              <Input className="mt-4" readOnly value={"2023-10-28"} />
-            </div>
-            <div>
-              <Label>OPD Slot:</Label>
-              <Input className="mt-4" readOnly value={"7:00 PM to 9:00 PM"} />
-            </div>
-          </div>
-        </Card>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <Card>
+              <div className="mb-4">
+                <FormField
+                  control={form.control}
+                  name="doctorName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Doctor Name:</FormLabel>
 
-        <Card>
-          <p className="font-semibold text-lg mb-4">Patient Details</p>
-          <div className="flex gap-4 mb-4">
-            <div>
-              <Label>Patient Name:</Label>
-              <Input className="mt-4" placeholder="Enter Patient Name" />
-            </div>
-            <div>
-              <Label>Enrollment Date:</Label>
-              <Input className="mt-4" readOnly value={"2023-10-28"} />
-            </div>
-          </div>
+                      <FormControl>
+                        <Input
+                          disabled={isLoading}
+                          className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0 mt-4"
+                          readOnly
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="flex gap-4 mb-4">
+                <div>
+                  <FormField
+                    control={form.control}
+                    name="opdDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>OPD Date:</FormLabel>
+                        <FormControl>
+                          <Input
+                            disabled={isLoading}
+                            className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0 mt-4"
+                            readOnly
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div>
+                  <FormField
+                    control={form.control}
+                    name="opdSlot"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>OPD Slot:</FormLabel>
+                        <FormControl>
+                          <Input
+                            disabled={isLoading}
+                            className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0 mt-4"
+                            readOnly
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+            </Card>
 
-          <div className="flex gap-4 mb-4">
-            <div>
-              <Label>Gender:</Label>
-              <Select>
-                <SelectTrigger className="w-[200px] mt-4">
-                  <SelectValue placeholder="Select Gender" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Male">Male</SelectItem>
-                  <SelectItem value="Female">Female</SelectItem>
-                  <SelectItem value="Other">Other</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label>Age:</Label>
-              <Input className="mt-4" />
-            </div>
-          </div>
-
-          <div className="flex gap-4 mb-4">
-            <div>
-              <Label>Pincode:</Label>
-              <Select>
-                <SelectTrigger className="w-[200px] mt-4">
-                  <SelectValue placeholder="Select Pin code" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Male">400077</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label>Mobile No:</Label>
-              <Input className="mt-4" placeholder="Enter Mobile No." />
-            </div>
-          </div>
-
-          <div className="flex gap-4 mb-4">
-            <div>
-              <Label>State:</Label>
-              <Select>
-                <SelectTrigger className="w-[200px] mt-4">
-                  <SelectValue placeholder="Select State" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Male">State</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
-              <Label>City:</Label>
-              <Select>
-                <SelectTrigger className="w-[200px] mt-4">
-                  <SelectValue placeholder="Select City" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Male">400077</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <div className="mb-4">
-            <Label>Address:</Label>
-            <Textarea className="mt-4" placeholder="Address" />
-          </div>
-        </Card>
-
-        <Card>
-          <p className="font-semibold text-lg mb-4">Diagnosis</p>
-          <div className="mb-4">
-            <Select>
-              <SelectTrigger className="w-full mt-4">
-                <SelectValue placeholder="Select Diagnosis" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Male">Example</SelectItem>
-                <SelectItem value="Female">Example</SelectItem>
-                <SelectItem value="Other">Example</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="mb-4">
-            <Label>Other comorbid conditions:</Label>
-            <Textarea className="mt-4" placeholder="Comorbid conditions" />
-          </div>
-        </Card>
-
-        <Card>
-          {brandTime.map((_singleBrand, index) => {
-            return <MoreBrand key={index} />;
-          })}
-          <div className="mt-6 text-yellow-300 border-yellow-300 border-solid border-2 rounded-lg">
-            <Button
-              className="w-full"
-              variant={"outline"}
-              onClick={addMoreBrandHandler}
-            >
-              <Plus />
-              Add More Brand
-            </Button>
-          </div>
-
-          <div className="mt-4">
-            <Label>Glucose Level:</Label>
-            <div className="flex gap-1 justify-between items-center my-4">
-              <div className="flex justify-center items-center gap-2">
-                <Input className="w-28" placeholder="Fasting" />
+            <Card>
+              <p className="font-semibold text-lg mb-4">Patient Details</p>
+              <div className="flex gap-4 mb-4">
+                <div>
+                  <FormField
+                    control={form.control}
+                    name="patientName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Patient Name:</FormLabel>
+                        <FormControl>
+                          <Input
+                            disabled={isLoading}
+                            className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0 mt-4"
+                            placeholder="Enter Patient Name"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div>
+                  <FormField
+                    control={form.control}
+                    name="enrollmentDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Enrollment Date:</FormLabel>
+                        <FormControl>
+                          <Input
+                            disabled={isLoading}
+                            className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0 mt-4"
+                            readOnly
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
 
-              <div className="flex justify-center items-center gap-2">
-                <Input className="w-28" placeholder="PP" />
+              <div className="flex gap-4 mb-4">
+                <div>
+                  <FormField
+                    control={form.control}
+                    name="gender"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Gender:</FormLabel>
+                        <Select
+                          disabled={isLoading}
+                          onValueChange={field.onChange}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="w-[200px] mt-4 bg-zinc-300/50 border-0 focus:ring-0 text-black ring-offset-0 focus:ring-offset-0 capitalize outline-none">
+                              <SelectValue placeholder="Select Gender" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem key="Male" value="Male">
+                              Male
+                            </SelectItem>
+                            <SelectItem key="Female" value="Female">
+                              Female
+                            </SelectItem>
+                            <SelectItem key="Other" value="Other">
+                              Other
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div>
+                  <FormField
+                    control={form.control}
+                    name="age"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Age:</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            disabled={isLoading}
+                            className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0 mt-4"
+                            {...field}
+                            placeholder="Please Enter Age"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
 
-              <div className="flex justify-center items-center gap-2">
-                <Input className="w-28" placeholder="HBA1c" />
+              <div className="flex gap-4 mb-4">
+                <div>
+                  <FormField
+                    control={form.control}
+                    name="pincode"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Pincode:</FormLabel>
+                        <Select
+                          disabled={isLoading}
+                          onValueChange={field.onChange}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="w-[200px] mt-4 bg-zinc-300/50 border-0 focus:ring-0 text-black ring-offset-0 focus:ring-offset-0 capitalize outline-none">
+                              <SelectValue placeholder="Select Pin code" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="400077">400077</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div>
+                  <FormField
+                    control={form.control}
+                    name="mobile"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Mobile No:</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="number"
+                            disabled={isLoading}
+                            className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0 mt-4"
+                            {...field}
+                            placeholder="Enter Mobile No."
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
-            </div>
-          </div>
 
-          <Label>Type:</Label>
-          <div className="mb-4">
-            <Select onValueChange={typeHandler}>
-              <SelectTrigger className="w-[250px] mt-4">
-                <SelectValue placeholder="Select Type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Enrolled">Enrolled</SelectItem>
-                <SelectItem value="Enrolled + Initiated">
-                  Enrolled + Initiated
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+              <div className="flex gap-4 mb-4">
+                <div>
+                  <FormField
+                    control={form.control}
+                    name="state"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>State:</FormLabel>
+                        <Select
+                          disabled={isLoading}
+                          onValueChange={field.onChange}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="w-[200px] mt-4 bg-zinc-300/50 border-0 focus:ring-0 text-black ring-offset-0 focus:ring-offset-0 capitalize outline-none">
+                              <SelectValue placeholder="Select State" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="State">State</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
 
-          {type === "Enrolled" && (
-            <div className="flex gap-4 mb-4">
-              <div>
-                <Label>Likely purchase date:</Label>
-                <Input className="mt-4 w-[200px]" type="date" />
+                <div>
+                  <FormField
+                    control={form.control}
+                    name="city"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>City:</FormLabel>
+                        <Select
+                          disabled={isLoading}
+                          onValueChange={field.onChange}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="w-[200px] mt-4 bg-zinc-300/50 border-0 focus:ring-0 text-black ring-offset-0 focus:ring-offset-0 capitalize outline-none">
+                              <SelectValue placeholder="Select City" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="City">City</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
-              <div>
-                <Label>Reason for not purchase:</Label>
-                <Select>
-                  <SelectTrigger className="w-[200px] mt-4">
-                    <SelectValue placeholder="Select Reason" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Male">Example</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          )}
 
-          {type === "Enrolled + Initiated" && (
-            <div className="flex gap-4 mb-4">
-              <div>
-                <Label>Product Image:</Label>
-                <RadioGroup
-                  className="flex gap-6 mt-4"
-                  defaultValue="option-one"
+              <div className="mb-4">
+                <FormField
+                  control={form.control}
+                  name="address"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Address:</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          disabled={isLoading}
+                          className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0 mt-4"
+                          {...field}
+                          placeholder="Address"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </Card>
+
+            <Card>
+              <p className="font-semibold text-lg mb-4">Diagnosis</p>
+              <div className="mb-4">
+                <FormField
+                  control={form.control}
+                  name="diagnosis"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Diagnosis:</FormLabel>
+                      <Select
+                        disabled={isLoading}
+                        onValueChange={field.onChange}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="w-full mt-4 bg-zinc-300/50 border-0 focus:ring-0 text-black ring-offset-0 focus:ring-offset-0 capitalize outline-none">
+                            <SelectValue placeholder="Select Diagnosis" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="1">Example</SelectItem>
+                          <SelectItem value="2">Example</SelectItem>
+                          <SelectItem value="3">Example</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="mb-4">
+                <FormField
+                  control={form.control}
+                  name="otherComorbidConditions"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Other comorbid conditions:</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          disabled={isLoading}
+                          className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0 mt-4"
+                          {...field}
+                          placeholder="Comorbid conditions"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </Card>
+
+            <Card>
+              {brandTime.map((_singleBrand, index) => {
+                return <MoreBrand key={index} />;
+              })}
+              <div className="mt-6 text-yellow-300 border-yellow-300 border-solid border-2 rounded-lg">
+                <Button
+                  className="w-full"
+                  variant={"outline"}
+                  onClick={addMoreBrandHandler}
                 >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem
-                      className=""
-                      value="option-one"
-                      id="option-one"
-                    />
-                    <Label htmlFor="option-one">OTP</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem
-                      className=""
-                      value="option-two"
-                      id="option-two"
-                    />
-                    <Label htmlFor="option-two">Upload Form</Label>
-                  </div>
-                </RadioGroup>
+                  <Plus />
+                  Add More Brand
+                </Button>
               </div>
-            </div>
-          )}
 
-          <div className="flex gap-4 mb-4">
-            <div>
-              <Label>DND:</Label>
-              <RadioGroup className="flex gap-6 mt-4" defaultValue="option-one">
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem
-                    className=""
-                    value="option-one"
-                    id="option-one"
+              <div className="mt-4">
+                <FormLabel>Glucose Level:</FormLabel>
+                <div className="flex gap-1 justify-between items-center my-4">
+                  <FormField
+                    control={form.control}
+                    name="fasting"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input
+                            disabled={isLoading}
+                            className="w-28 bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0 mt-4"
+                            placeholder="Fasting"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                  <Label htmlFor="option-one">Yes</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem
-                    className=""
-                    value="option-two"
-                    id="option-two"
-                  />
-                  <Label htmlFor="option-two">No</Label>
-                </div>
-              </RadioGroup>
-            </div>
-          </div>
-          <div className="mb-4">
-            <Label>Notes:</Label>
-            <Textarea className="mt-4" placeholder="Note" />
-          </div>
-        </Card>
 
-        <div className="flex justify-center items-center m-4">
-          <Button className="px-6 bg-yellow-500 hover:bg-yellow-500/90">
-            Submit
-          </Button>
-        </div>
+                  <FormField
+                    control={form.control}
+                    name="pp"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input
+                            disabled={isLoading}
+                            className="w-28 bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0 mt-4"
+                            placeholder="PP"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="hba1c"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <Input
+                            disabled={isLoading}
+                            className="w-28 bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0 mt-4"
+                            placeholder="HBA1c"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+              <div className="mb-4">
+                <FormField
+                  control={form.control}
+                  name="type"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Type:</FormLabel>
+                      <Select
+                        disabled={isLoading}
+                        onValueChange={(event) =>
+                          typeHandler(event, field.onChange)
+                        }
+                      >
+                        <FormControl>
+                          <SelectTrigger className="w-[250px] mt-4 bg-zinc-300/50 border-0 focus:ring-0 text-black ring-offset-0 focus:ring-offset-0 capitalize outline-none">
+                            <SelectValue placeholder="Select Type" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="Enrolled">Enrolled</SelectItem>
+                          <SelectItem value="Enrolled + Initiated">
+                            Enrolled + Initiated
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              {type === "Enrolled" && (
+                <div className="flex gap-4 mb-4">
+                  <div>
+                    <Label>Likely purchase date:</Label>
+                    <Input className="mt-4 w-[200px]" type="date" />
+                  </div>
+                  <div>
+                    <Label>Reason for not purchase:</Label>
+                    <Select>
+                      <SelectTrigger className="w-[200px] mt-4">
+                        <SelectValue placeholder="Select Reason" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Male">Example</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              )}
+
+              {type === "Enrolled + Initiated" && (
+                <div className="flex gap-4 mb-4">
+                  <div>
+                    <Label>Product Image:</Label>
+                    <RadioGroup
+                      className="flex gap-6 mt-4"
+                      defaultValue="option-one"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem
+                          className=""
+                          value="option-one"
+                          id="option-one"
+                        />
+                        <Label htmlFor="option-one">OTP</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem
+                          className=""
+                          value="option-two"
+                          id="option-two"
+                        />
+                        <Label htmlFor="option-two">Upload Form</Label>
+                      </div>
+                    </RadioGroup>
+                  </div>
+                </div>
+              )}
+
+              <div className="flex gap-4 mb-4">
+                <div>
+                  <FormField
+                    control={form.control}
+                    name="dnd"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>DND:</FormLabel>
+                        <RadioGroup
+                          disabled={isLoading}
+                          onChange={field.onChange}
+                          className="flex gap-6 mt-4"
+                        >
+                          <FormControl></FormControl>
+                          <div className="flex items-center space-x-2">
+                            <FormLabel>Yes:</FormLabel>
+                            <RadioGroupItem className="" value="yes" />
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <FormLabel>No:</FormLabel>
+
+                            <RadioGroupItem className="" value="no" />
+                          </div>
+                        </RadioGroup>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+              <div className="mb-4">
+                <FormField
+                  control={form.control}
+                  name="notes"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Notes:</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          disabled={isLoading}
+                          className="bg-zinc-300/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0 mt-4"
+                          {...field}
+                          placeholder="Note"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </Card>
+
+            <div className="flex justify-center items-center m-4">
+              <Button className="px-6 bg-yellow-500 hover:bg-yellow-500/90 mb-4">
+                Submit
+              </Button>
+            </div>
+          </form>
+        </Form>
       </WholeScreen>
     </div>
   );
